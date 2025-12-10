@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Session Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0f1724;
+            --card: #0b1220;
+            --muted: #98a0b3;
+            --accent: #6ee7b7;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --glass: rgba(255, 255, 255, 0.06);
+            --glass-2: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-glow: 0 6px 30px rgba(99, 102, 241, 0.12);
+            --radius: 14px;
+            --glass-blur: 10px;
+            --shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
+            --ease: cubic-bezier(.2, .9, .3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f1724 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--card);
+            border-radius: var(--radius);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #7c3aed, #06b6d4, #10b981);
+        }
+
+        .logo {
+            font-size: 48px;
+            color: #06b6d4;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #7c3aed, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            padding: 25px;
+            border-radius: var(--radius);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(var(--glass-blur));
+            box-shadow: var(--shadow);
+            transition: all 0.3s var(--ease);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.15);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #06b6d4;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .input-group select,
+        .input-group input {
+            flex: 1;
+        }
+
+        select, input, button {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.7);
+            color: inherit;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(90deg, #7c3aed, #06b6d4);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+
+        .btn-danger {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--muted);
+        }
+
+        .status-container {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.5);
+            border-left: 4px solid var(--info);
+        }
+
+        .status-processing {
+            border-left-color: var(--warning);
+        }
+
+        .status-success {
+            border-left-color: var(--success);
+        }
+
+        .status-error {
+            border-left-color: var(--danger);
+        }
+
+        .otp-animation {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .otp-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: bounce 1.4s infinite;
+        }
+
+        .otp-dot:nth-child(2) { animation-delay: 0.2s; }
+        .otp-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-15px); }
+        }
+
+        .session-list {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .session-item {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .session-info h4 {
+            margin-bottom: 5px;
+            color: #e2e8f0;
+        }
+
+        .session-meta {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .session-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(2, 6, 23, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: #06b6d4;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .token-display {
+            background: rgba(15, 23, 42, 0.7);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .phone-check {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .phone-check.used {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .phone-check.available {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            background: var(--card);
+            border-left: 4px solid;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateX(120%);
+            transition: transform 0.3s;
+            z-index: 1001;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left-color: var(--success);
+        }
+
+        .notification.error {
+            border-left-color: var(--danger);
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning);
+        }
+
+        .notification.info {
+            border-left-color: var(--info);
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification System -->
+    <div id="notification" class="notification">
+        <div id="notificationMessage"></div>
+    </div>
+
+    <!-- Username Modal -->
+    <div id="usernameModal" class="modal show">
+        <div class="modal-content">
+            <div class="logo"><i class="fas fa-user-circle"></i></div>
+            <h2 style="text-align: center; margin-bottom: 20px;">Welcome to Telegram Session Manager</h2>
+            <div class="form-group">
+                <label for="usernameInput"><i class="fas fa-user"></i> Enter Your Username</label>
+                <input type="text" id="usernameInput" placeholder="Enter a unique username" autofocus>
+            </div>
+            <button id="submitUsername" class="btn">
+                <i class="fas fa-check"></i> Continue
+            </button>
+            <div id="usernameStatus" style="margin-top: 15px; color: var(--muted); font-size: 0.9rem;"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container" id="mainContent" style="display: none;">
+        <div class="header">
+            <div class="logo">
+                <i class="fab fa-telegram"></i>
+            </div>
+            <h1>Telegram Session Manager</h1>
+            <p class="subtitle">Create and manage Telegram sessions securely with OTP verification</p>
+        </div>
+
+        <div class="grid">
+            <!-- Create Session Panel -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-plus-circle"></i> Create New Session</h2>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-flag"></i> Country Code</label>
+                    <div class="input-group">
+                        <select id="countryCode" class="country-select">
+                            <option value="+880">Bangladesh (+880)</option>
+                            <option value="+91">India (+91)</option>
+                            <option value="+1">USA (+1)</option>
+                            <option value="+31">Netherlands (+31)</option>
+                            <option value="+65">Singapore (+65)</option>
+                            <option value="+27">South Africa (+27)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Phone Number</label>
+                    <input type="tel" id="phoneInput" placeholder="1XXXXXXXXXX">
+                </div>
+
+                <div id="phoneCheck" class="phone-check" style="display: none;">
+                    <i class="fas fa-spinner loader"></i> Checking phone number...
+                </div>
+
+                <button id="sendOtpBtn" class="btn">
+                    <i class="fas fa-paper-plane"></i> Send OTP
+                </button>
+
+                <!-- OTP Animation -->
+                <div id="otpAnimation" class="otp-animation" style="display: none;">
+                    <div class="otp-dot"></div>
+                    <div class="otp-dot"></div>
+                    <div class="otp-dot"></div>
+                </div>
+
+                <!-- OTP Input Area -->
+                <div id="otpArea" style="display: none; margin-top: 20px;">
+                    <label><i class="fas fa-key"></i> Enter OTP</label>
+                    <div class="input-group">
+                        <input type="text" id="otpInput" placeholder="12345" maxlength="5">
+                        <button id="verifyBtn" class="btn btn-success">
+                            <i class="fas fa-check"></i> Verify
+                        </button>
+                    </div>
+
+                    <!-- 2FA Password Area -->
+                    <div id="passwordArea" style="display: none; margin-top: 15px;">
+                        <label><i class="fas fa-shield-alt"></i> 2FA Password (Required)</label>
+                        <input type="password" id="passwordInput" placeholder="Enter Telegram 2FA password">
+                        <small style="color: var(--warning); display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> 2FA will be automatically enabled for this account
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Status Messages -->
+                <div id="createStatus" class="status-container">
+                    <div id="statusIcon" style="float: left; margin-right: 10px;"></div>
+                    <div id="statusText">Ready to create session</div>
+                </div>
+
+                <!-- Token Display -->
+                <div style="margin-top: 25px;">
+                    <label><i class="fas fa-key"></i> Your Session Token</label>
+                    <div id="tokenBox" class="token-display"></div>
+                    <button id="resetTokenBtn" class="btn btn-secondary" style="margin-top: 10px;">
+                        <i class="fas fa-sync-alt"></i> Reset Token
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sessions List Panel -->
+            <div class="card" id="sessionsPanel" style="display: none;">
+                <h2 class="card-title"><i class="fas fa-folder-open"></i> My Sessions</h2>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-filter"></i> Selection Limit</label>
+                    <input type="number" id="cap" value="5" min="1" max="20">
+                </div>
+
+                <div style="margin-bottom: 15px; color: var(--muted);">
+                    <i class="fas fa-info-circle"></i> Selected: <span id="selectedCount">0</span> files
+                </div>
+
+                <div id="sessions" class="session-list">
+                    <!-- Sessions will be loaded here -->
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button id="selectAll" class="btn btn-secondary">
+                        <i class="fas fa-check-double"></i> Select All
+                    </button>
+                    <button id="clearAll" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Clear All
+                    </button>
+                    <button id="downloadSelected" class="btn">
+                        <i class="fas fa-download"></i> Download ZIP
+                    </button>
+                </div>
+
+                <button id="getSessionsBtn" class="btn" style="margin-top: 15px;">
+                    <i class="fas fa-redo"></i> Refresh Sessions
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Session Preview Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-file-alt"></i> Session Details
+            </h2>
+            <pre id="previewContent" style="background: rgba(15, 23, 42, 0.7); padding: 20px; border-radius: 8px; max-height: 60vh; overflow: auto; font-size: 0.9rem;"></pre>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button id="modalCopy" class="btn">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+                <button id="modalClose" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Notification System
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const messageEl = document.getElementById('notificationMessage');
+            
+            notification.className = `notification ${type}`;
+            messageEl.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i> ${message}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Username Modal
+        const usernameModal = document.getElementById('usernameModal');
+        const mainContent = document.getElementById('mainContent');
+        const usernameInput = document.getElementById('usernameInput');
+        const submitUsername = document.getElementById('submitUsername');
+        const usernameStatus = document.getElementById('usernameStatus');
+        const tokenBox = document.getElementById('tokenBox');
+        const resetTokenBtn = document.getElementById('resetTokenBtn');
+
+        function generateToken(username) {
+            return `tk_${username}_${Date.now().toString(36)}_${Math.random().toString(36).substr(2, 8)}`;
+        }
+
+        async function saveUser(username, token) {
+            try {
+                const res = await fetch('/newuser', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, token })
+                });
+                return await res.json();
+            } catch (e) {
+                return { ok: false, error: e.message };
+            }
+        }
+
+        let savedUser = localStorage.getItem('ts_username');
+        let savedToken = localStorage.getItem('ts_token');
+
+        if (!savedUser) {
+            usernameModal.classList.add('show');
+        } else {
+            tokenBox.textContent = savedToken;
+            mainContent.style.display = 'block';
+        }
+
+        submitUsername.addEventListener('click', async () => {
+            const username = usernameInput.value.trim();
+            if (!username) {
+                usernameStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a username';
+                return;
+            }
+            
+            usernameStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating your account...';
+            submitUsername.disabled = true;
+            
+            const token = generateToken(username);
+            const res = await saveUser(username, token);
+            
+            if (res.ok) {
+                localStorage.setItem('ts_username', username);
+                localStorage.setItem('ts_token', token);
+                tokenBox.textContent = token;
+                usernameModal.classList.remove('show');
+                mainContent.style.display = 'block';
+                showNotification('Welcome! Your account has been created.', 'success');
+            } else {
+                usernameStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error: ${res.error || 'Failed to create account'}`;
+                submitUsername.disabled = false;
+            }
+        });
+
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitUsername.click();
+            }
+        });
+
+        resetTokenBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to reset your token? All your sessions will remain but you\'ll need to save this new token.')) {
+                localStorage.removeItem('ts_username');
+                localStorage.removeItem('ts_token');
+                usernameInput.value = '';
+                usernameStatus.textContent = '';
+                usernameModal.classList.add('show');
+                mainContent.style.display = 'none';
+                showNotification('Token reset successfully.', 'info');
+            }
+        });
+
+        // Session Manager Logic
+        const phoneInput = document.getElementById('phoneInput');
+        const countryCode = document.getElementById('countryCode');
+        const otpInput = document.getElementById('otpInput');
+        const otpArea = document.getElementById('otpArea');
+        const otpAnimation = document.getElementById('otpAnimation');
+        const sendOtpBtn = document.getElementById('sendOtpBtn');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const sessionsEl = document.getElementById('sessions');
+        const selectedCountEl = document.getElementById('selectedCount');
+        const capInput = document.getElementById('cap');
+        const selectAllBtn = document.getElementById('selectAll');
+        const clearAllBtn = document.getElementById('clearAll');
+        const downloadSelectedBtn = document.getElementById('downloadSelected');
+        const previewModal = document.getElementById('previewModal');
+        const previewContent = document.getElementById('previewContent');
+        const modalClose = document.getElementById('modalClose');
+        const modalCopy = document.getElementById('modalCopy');
+        const getSessionsBtn = document.getElementById('getSessionsBtn');
+        const sessionsPanel = document.getElementById('sessionsPanel');
+        const createStatus = document.getElementById('createStatus');
+        const statusText = document.getElementById('statusText');
+        const statusIcon = document.getElementById('statusIcon');
+        const phoneCheck = document.getElementById('phoneCheck');
+        const passwordArea = document.getElementById('passwordArea');
+        const passwordInput = document.getElementById('passwordInput');
+
+        function updateStatus(message, type = 'info') {
+            const icons = {
+                info: '<i class="fas fa-info-circle" style="color: var(--info);"></i>',
+                processing: '<i class="fas fa-spinner fa-spin" style="color: var(--warning);"></i>',
+                success: '<i class="fas fa-check-circle" style="color: var(--success);"></i>',
+                error: '<i class="fas fa-exclamation-circle" style="color: var(--danger);"></i>',
+                warning: '<i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i>'
+            };
+            
+            statusIcon.innerHTML = icons[type] || icons.info;
+            statusText.textContent = message;
+            createStatus.className = `status-container status-${type}`;
+        }
+
+        // Phone number check
+        async function checkPhoneNumber() {
+            const phone = phoneInput.value.trim();
+            const ccode = countryCode.value;
+            const fullPhone = ccode + phone;
+            
+            if (!phone) return;
+            
+            phoneCheck.style.display = 'block';
+            phoneCheck.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking phone number...';
+            
+            try {
+                const response = await fetch('/checkPhone', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: fullPhone })
+                });
+                
+                const result = await response.json();
+                
+                if (result.ok) {
+                    if (result.isUsed) {
+                        phoneCheck.className = 'phone-check used';
+                        phoneCheck.innerHTML = '<i class="fas fa-times-circle"></i> This number has already been used';
+                        sendOtpBtn.disabled = true;
+                    } else {
+                        phoneCheck.className = 'phone-check available';
+                        phoneCheck.innerHTML = '<i class="fas fa-check-circle"></i> This number is available';
+                        sendOtpBtn.disabled = false;
+                    }
+                }
+            } catch (error) {
+                phoneCheck.className = 'phone-check';
+                phoneCheck.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Unable to check phone number';
+            }
+        }
+
+        phoneInput.addEventListener('input', checkPhoneNumber);
+        countryCode.addEventListener('change', checkPhoneNumber);
+
+        // API Functions
+        async function apiGetSessionList() {
+            const token = localStorage.getItem('ts_token');
+            const response = await fetch(`/sessionList?token=${encodeURIComponent(token)}`);
+            if (!response.ok) throw new Error('Failed to fetch sessions');
+            return await response.json();
+        }
+
+        async function apiViewFile(name) {
+            const token = localStorage.getItem('ts_token');
+            const response = await fetch(`/view/${encodeURIComponent(name)}?token=${encodeURIComponent(token)}`);
+            if (!response.ok) throw new Error('Failed to fetch file');
+            return await response.json();
+        }
+
+        async function apiSendOtp(phone, ccode) {
+            const token = localStorage.getItem('ts_token');
+            const response = await fetch('/sendOtp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone, countryCode: ccode, token })
+            });
+            return await response.json();
+        }
+
+        async function apiVerify(phone, code, password = '') {
+            const token = localStorage.getItem('ts_token');
+            const response = await fetch('/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone, code, password, token })
+            });
+            return await response.json();
+        }
+
+        async function apiZip(files) {
+            const token = localStorage.getItem('ts_token');
+            const response = await fetch('/zip', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ files, token })
+            });
+            if (!response.ok) throw new Error('Zip failed');
+            return await response.blob();
+        }
+
+        // Render sessions
+        async function renderSessions() {
+            sessionsEl.innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Loading sessions...</div>';
+            
+            try {
+                const list = await apiGetSessionList();
+                
+                if (list.length === 0) {
+                    sessionsEl.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--muted);"><i class="fas fa-folder-open"></i> No sessions found</div>';
+                    return;
+                }
+                
+                const cap = Number(capInput.value) || 5;
+                sessionsEl.innerHTML = '';
+                
+                list.slice(0, cap).forEach((item, index) => {
+                    const date = new Date(item.timestamp);
+                    const dateStr = date.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true
+                    });
+                    
+                    const sessionItem = document.createElement('div');
+                    sessionItem.className = 'session-item';
+                    sessionItem.innerHTML = `
+                        <div class="session-info">
+                            <h4>
+                                ${item.name}
+                                ${item.has2FA ? '<span class="badge badge-success">2FA ON</span>' : '<span class="badge badge-warning">2FA OFF</span>'}
+                            </h4>
+                            <div class="session-meta">
+                                <div><i class="fas fa-phone"></i> ${item.phone}</div>
+                                <div><i class="fas fa-calendar"></i> ${dateStr}</div>
+                                <div><i class="fas fa-database"></i> ${(item.size / 1024).toFixed(1)} KB</div>
+                            </div>
+                        </div>
+                        <div class="session-actions">
+                            <input type="checkbox" class="session-checkbox" value="${item.name}" ${index < Math.min(5, cap) ? 'checked' : ''}>
+                            <button class="btn btn-secondary view-btn" data-file="${item.name}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <a class="btn btn-secondary" href="/download/${encodeURIComponent(item.name)}?token=${encodeURIComponent(localStorage.getItem('ts_token'))}" download>
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    `;
+                    
+                    sessionsEl.appendChild(sessionItem);
+                });
+                
+                // Add event listeners
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const fileName = e.currentTarget.dataset.file;
+                        await openPreview(fileName);
+                    });
+                });
+                
+                document.querySelectorAll('.session-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', updateSelectedCount);
+                });
+                
+                updateSelectedCount();
+                sessionsPanel.style.display = 'block';
+                showNotification('Sessions loaded successfully', 'success');
+                
+            } catch (error) {
+                sessionsEl.innerHTML = `<div style="color: var(--danger); padding: 20px; text-align: center;">
+                    <i class="fas fa-exclamation-circle"></i> Failed to load sessions: ${error.message}
+                </div>`;
+            }
+        }
+
+        function updateSelectedCount() {
+            const selected = document.querySelectorAll('.session-checkbox:checked').length;
+            selectedCountEl.textContent = selected;
+        }
+
+        async function openPreview(name) {
+            try {
+                previewContent.innerHTML = '<div style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+                previewModal.classList.add('show');
+                
+                const data = await apiViewFile(name);
+                
+                let content = '';
+                if (typeof data === 'object') {
+                    content = JSON.stringify(data, null, 2);
+                    
+                    // Highlight 2FA info
+                    if (data.has2FA) {
+                        content = content.replace('"has2FA": true', '"has2FA": true 🔐');
+                    }
+                    if (data.twoFAPassword) {
+                        content = content.replace('"twoFAPassword":', '"twoFAPassword": ⚠️ ');
+                    }
+                } else {
+                    content = data;
+                }
+                
+                previewContent.textContent = content;
+                
+            } catch (error) {
+                previewContent.textContent = `Error loading file: ${error.message}`;
+            }
+        }
+
+        // Send OTP
+        sendOtpBtn.addEventListener('click', async () => {
+            const phone = phoneInput.value.trim();
+            const ccode = countryCode.value;
+            
+            if (!phone) {
+                showNotification('Please enter a phone number', 'error');
+                return;
+            }
+            
+            // Format phone number
+            let formattedPhone = phone;
+            if (formattedPhone.startsWith(ccode)) {
+                formattedPhone = formattedPhone.slice(ccode.length);
+            }
+            if (formattedPhone.startsWith(ccode.replace('+', ''))) {
+                formattedPhone = formattedPhone.slice(ccode.replace('+', '').length);
+            }
+            
+            updateStatus('Sending OTP...', 'processing');
+            otpAnimation.style.display = 'flex';
+            sendOtpBtn.disabled = true;
+            sendOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            
+            try {
+                const result = await apiSendOtp(formattedPhone, ccode);
+                
+                if (result.ok) {
+                    updateStatus('OTP sent successfully! Check your Telegram', 'success');
+                    otpArea.style.display = 'block';
+                    otpInput.focus();
+                    showNotification('OTP sent! Please check your Telegram app', 'success');
+                } else {
+                    if (result.error === 'ALREADY_USED') {
+                        updateStatus('This number has already been used', 'error');
+                        showNotification('This phone number has already been used', 'error');
+                    } else {
+                        updateStatus(`Error: ${result.error}`, 'error');
+                        showNotification(`Failed to send OTP: ${result.error}`, 'error');
+                    }
+                }
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`, 'error');
+                showNotification('Network error occurred', 'error');
+            } finally {
+                otpAnimation.style.display = 'none';
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send OTP';
+            }
+        });
+
+        // Verify OTP
+        verifyBtn.addEventListener('click', async () => {
+            const phoneRaw = phoneInput.value.trim();
+            const ccode = countryCode.value;
+            const code = otpInput.value.trim();
+            const password = passwordInput.value;
+            
+            if (!phoneRaw || !code) {
+                showNotification('Phone and OTP are required', 'error');
+                return;
+            }
+            
+            // Format phone number
+            let formattedPhone = phoneRaw;
+            if (formattedPhone.startsWith(ccode)) {
+                formattedPhone = formattedPhone.slice(ccode.length);
+            }
+            if (formattedPhone.startsWith(ccode.replace('+', ''))) {
+                formattedPhone = formattedPhone.slice(ccode.replace('+', '').length);
+            }
+            
+            const fullPhone = ccode + formattedPhone;
+            
+            updateStatus('Verifying OTP...', 'processing');
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+            
+            try {
+                const result = await apiVerify(fullPhone, code, password);
+                
+                if (result.ok) {
+                    updateStatus('Session created successfully! 2FA enabled', 'success');
+                    otpArea.style.display = 'none';
+                    passwordArea.style.display = 'none';
+                    phoneInput.value = '';
+                    otpInput.value = '';
+                    passwordInput.value = '';
+                    
+                    showNotification('Session created with 2FA protection!', 'success');
+                    
+                    // Load sessions
+                    await renderSessions();
+                    
+                } else if (result.error === '2FA_PASSWORD_REQUIRED') {
+                    updateStatus('2FA password required', 'warning');
+                    passwordArea.style.display = 'block';
+                    passwordInput.focus();
+                    showNotification('Please enter your 2FA password', 'warning');
+                } else {
+                    updateStatus(`Error: ${result.error}`, 'error');
+                    showNotification(`Verification failed: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`, 'error');
+                showNotification('Verification error occurred', 'error');
+            } finally {
+                verifyBtn.disabled = false;
+                verifyBtn.innerHTML = '<i class="fas fa-check"></i> Verify';
+            }
+        });
+
+        // OTP input enter key
+        otpInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                verifyBtn.click();
+            }
+        });
+
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                verifyBtn.click();
+            }
+        });
+
+        // Session management buttons
+        selectAllBtn.addEventListener('click', () => {
+            const cap = Number(capInput.value) || 5;
+            document.querySelectorAll('.session-checkbox').forEach((checkbox, index) => {
+                checkbox.checked = index < cap;
+            });
+            updateSelectedCount();
+        });
+
+        clearAllBtn.addEventListener('click', () => {
+            document.querySelectorAll('.session-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            updateSelectedCount();
+        });
+
+        downloadSelectedBtn.addEventListener('click', async () => {
+            const selected = Array.from(document.querySelectorAll('.session-checkbox:checked'))
+                .map(cb => cb.value);
+            
+            if (selected.length === 0) {
+                showNotification('Please select at least one session', 'warning');
+                return;
+            }
+            
+            try {
+                downloadSelectedBtn.disabled = true;
+                downloadSelectedBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating ZIP...';
+                
+                const blob = await apiZip(selected);
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `telegram_sessions_${Date.now()}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showNotification('ZIP file downloaded successfully', 'success');
+            } catch (error) {
+                showNotification(`Download failed: ${error.message}`, 'error');
+            } finally {
+                downloadSelectedBtn.disabled = false;
+                downloadSelectedBtn.innerHTML = '<i class="fas fa-download"></i> Download ZIP';
+            }
+        });
+
+        capInput.addEventListener('change', () => {
+            renderSessions();
+        });
+
+        getSessionsBtn.addEventListener('click', () => {
+            renderSessions();
+        });
+
+        // Modal buttons
+        modalClose.addEventListener('click', () => {
+            previewModal.classList.remove('show');
+        });
+
+        modalCopy.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(previewContent.textContent);
+                showNotification('Copied to clipboard', 'success');
+            } catch (error) {
+                showNotification('Failed to copy', 'error');
+            }
+        });
+
+        // Close modal on outside click
+        previewModal.addEventListener('click', (e) => {
+            if (e.target === previewModal) {
+                previewModal.classList.remove('show');
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            if (savedUser) {
+                renderSessions();
+            }
+        });
+    </script>
+</body>
+</html>
