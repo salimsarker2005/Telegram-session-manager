@@ -409,6 +409,16 @@
             border-left-color: var(--info);
         }
 
+        .proxy-info {
+            font-size: 0.8rem;
+            color: var(--info);
+            margin-top: 5px;
+            padding: 5px 10px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 5px;
+            display: inline-block;
+        }
+
         @media (max-width: 768px) {
             .grid {
                 grid-template-columns: 1fr;
@@ -420,6 +430,10 @@
             
             h1 {
                 font-size: 2rem;
+            }
+            
+            .input-group {
+                flex-direction: column;
             }
         }
     </style>
@@ -462,26 +476,58 @@
                 <h2 class="card-title"><i class="fas fa-plus-circle"></i> Create New Session</h2>
                 
                 <div class="form-group">
-                    <label><i class="fas fa-flag"></i> Country Code</label>
-                    <div class="input-group">
-                        <select id="countryCode" class="country-select">
-                            <option value="+880">Bangladesh (+880)</option>
-                            <option value="+91">India (+91)</option>
-                            <option value="+1">USA (+1)</option>
-                            <option value="+31">Netherlands (+31)</option>
-                            <option value="+65">Singapore (+65)</option>
-                            <option value="+27">South Africa (+27)</option>
-                        </select>
-                    </div>
+                    <label><i class="fas fa-globe"></i> Select Country</label>
+                    <select id="countryCode" class="country-select">
+                        <option value="+880">🇧🇩 Bangladesh (+880)</option>
+                        <option value="+91">🇮🇳 India (+91)</option>
+                        <option value="+1">🇺🇸 USA/Canada (+1)</option>
+                        <option value="+44">🇬🇧 United Kingdom (+44)</option>
+                        <option value="+33">🇫🇷 France (+33)</option>
+                        <option value="+49">🇩🇪 Germany (+49)</option>
+                        <option value="+31">🇳🇱 Netherlands (+31)</option>
+                        <option value="+65">🇸🇬 Singapore (+65)</option>
+                        <option value="+27">🇿🇦 South Africa (+27)</option>
+                        <option value="+7">🇷🇺 Russia (+7)</option>
+                        <option value="+81">🇯🇵 Japan (+81)</option>
+                        <option value="+82">🇰🇷 South Korea (+82)</option>
+                        <option value="+61">🇦🇺 Australia (+61)</option>
+                        <option value="+92">🇵🇰 Pakistan (+92)</option>
+                        <option value="+971">🇦🇪 United Arab Emirates (+971)</option>
+                        <option value="+20">🇪🇬 Egypt (+20)</option>
+                        <option value="+90">🇹🇷 Turkey (+90)</option>
+                        <option value="+34">🇪🇸 Spain (+34)</option>
+                        <option value="+39">🇮🇹 Italy (+39)</option>
+                        <option value="+86">🇨🇳 China (+86)</option>
+                        <option value="+62">🇮🇩 Indonesia (+62)</option>
+                        <option value="+60">🇲🇾 Malaysia (+60)</option>
+                        <option value="+63">🇵🇭 Philippines (+63)</option>
+                        <option value="+66">🇹🇭 Thailand (+66)</option>
+                        <option value="+84">🇻🇳 Vietnam (+84)</option>
+                        <option value="+55">🇧🇷 Brazil (+55)</option>
+                        <option value="+52">🇲🇽 Mexico (+52)</option>
+                        <option value="+54">🇦🇷 Argentina (+54)</option>
+                        <option value="+57">🇨🇴 Colombia (+57)</option>
+                        <option value="+58">🇻🇪 Venezuela (+58)</option>
+                    </select>
+                    <small style="color: var(--muted); display: block; margin-top: 5px;">
+                        <i class="fas fa-info-circle"></i> Country-specific proxies will be used automatically
+                    </small>
                 </div>
 
                 <div class="form-group">
                     <label><i class="fas fa-phone"></i> Phone Number</label>
-                    <input type="tel" id="phoneInput" placeholder="1XXXXXXXXXX">
+                    <input type="tel" id="phoneInput" placeholder="1XXXXXXXXXX (without country code)">
+                    <small style="color: var(--muted); display: block; margin-top: 5px;">
+                        <i class="fas fa-info-circle"></i> Enter phone number without country code
+                    </small>
                 </div>
 
                 <div id="phoneCheck" class="phone-check" style="display: none;">
                     <i class="fas fa-spinner loader"></i> Checking phone number...
+                </div>
+
+                <div id="proxyInfo" class="proxy-info" style="display: none;">
+                    <i class="fas fa-server"></i> Using optimized proxy for your country
                 </div>
 
                 <button id="sendOtpBtn" class="btn">
@@ -499,7 +545,7 @@
                 <div id="otpArea" style="display: none; margin-top: 20px;">
                     <label><i class="fas fa-key"></i> Enter OTP</label>
                     <div class="input-group">
-                        <input type="text" id="otpInput" placeholder="12345" maxlength="5">
+                        <input type="text" id="otpInput" placeholder="12345" maxlength="6">
                         <button id="verifyBtn" class="btn btn-success">
                             <i class="fas fa-check"></i> Verify
                         </button>
@@ -537,7 +583,10 @@
                 
                 <div class="form-group">
                     <label><i class="fas fa-filter"></i> Selection Limit</label>
-                    <input type="number" id="cap" value="5" min="1" max="20">
+                    <input type="number" id="cap" value="10" min="1" max="50">
+                    <small style="color: var(--muted); display: block; margin-top: 5px;">
+                        <i class="fas fa-info-circle"></i> Maximum number of sessions to show and select
+                    </small>
                 </div>
 
                 <div style="margin-bottom: 15px; color: var(--muted);">
@@ -560,9 +609,51 @@
                     </button>
                 </div>
 
-                <button id="getSessionsBtn" class="btn" style="margin-top: 15px;">
-                    <i class="fas fa-redo"></i> Refresh Sessions
-                </button>
+                <div style="margin-top: 15px; display: flex; gap: 10px;">
+                    <button id="getSessionsBtn" class="btn">
+                        <i class="fas fa-redo"></i> Refresh Sessions
+                    </button>
+                    <button id="checkAllPhones" class="btn btn-secondary">
+                        <i class="fas fa-search"></i> Check Phones
+                    </button>
+                </div>
+
+                <div style="margin-top: 20px; padding: 15px; background: rgba(15, 23, 42, 0.3); border-radius: 10px;">
+                    <h4 style="margin-bottom: 10px; color: #06b6d4;"><i class="fas fa-info-circle"></i> Session Info</h4>
+                    <div style="font-size: 0.9rem; color: var(--muted);">
+                        <div><i class="fas fa-shield-alt"></i> <strong>Auto 2FA:</strong> All sessions have 2FA automatically enabled</div>
+                        <div><i class="fas fa-ban"></i> <strong>Duplicate Protection:</strong> Each phone number can only be used once</div>
+                        <div><i class="fas fa-server"></i> <strong>Smart Proxies:</strong> Country-specific proxies for better success rate</div>
+                        <div><i class="fas fa-download"></i> <strong>Bulk Download:</strong> Download multiple sessions as ZIP file</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Panel -->
+        <div class="card" style="margin-top: 20px;">
+            <h2 class="card-title"><i class="fas fa-chart-bar"></i> System Statistics</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 15px;">
+                <div style="text-align: center; padding: 15px; background: rgba(15, 23, 42, 0.5); border-radius: 10px;">
+                    <div style="font-size: 1.5rem; color: #06b6d4;"><i class="fas fa-folder"></i></div>
+                    <div style="font-size: 0.9rem; color: var(--muted);">Total Sessions</div>
+                    <div id="totalSessions" style="font-size: 1.8rem; font-weight: bold; margin-top: 5px;">0</div>
+                </div>
+                <div style="text-align: center; padding: 15px; background: rgba(15, 23, 42, 0.5); border-radius: 10px;">
+                    <div style="font-size: 1.5rem; color: #10b981;"><i class="fas fa-shield-alt"></i></div>
+                    <div style="font-size: 0.9rem; color: var(--muted);">2FA Enabled</div>
+                    <div id="twofaSessions" style="font-size: 1.8rem; font-weight: bold; margin-top: 5px;">0</div>
+                </div>
+                <div style="text-align: center; padding: 15px; background: rgba(15, 23, 42, 0.5); border-radius: 10px;">
+                    <div style="font-size: 1.5rem; color: #f59e0b;"><i class="fas fa-phone"></i></div>
+                    <div style="font-size: 0.9rem; color: var(--muted);">Used Phones</div>
+                    <div id="usedPhones" style="font-size: 1.8rem; font-weight: bold; margin-top: 5px;">0</div>
+                </div>
+                <div style="text-align: center; padding: 15px; background: rgba(15, 23, 42, 0.5); border-radius: 10px;">
+                    <div style="font-size: 1.5rem; color: #8b5cf6;"><i class="fas fa-globe"></i></div>
+                    <div style="font-size: 0.9rem; color: var(--muted);">Countries</div>
+                    <div id="countriesCount" style="font-size: 1.8rem; font-weight: bold; margin-top: 5px;">0</div>
+                </div>
             </div>
         </div>
     </div>
@@ -576,12 +667,38 @@
             <pre id="previewContent" style="background: rgba(15, 23, 42, 0.7); padding: 20px; border-radius: 8px; max-height: 60vh; overflow: auto; font-size: 0.9rem;"></pre>
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button id="modalCopy" class="btn">
-                    <i class="fas fa-copy"></i> Copy
+                    <i class="fas fa-copy"></i> Copy Session
                 </button>
+                <a id="modalDownload" class="btn btn-success" href="#" download>
+                    <i class="fas fa-download"></i> Download
+                </a>
                 <button id="modalClose" class="btn btn-secondary">
                     <i class="fas fa-times"></i> Close
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Phone Check Modal -->
+    <div id="phoneModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-search"></i> Phone Number Check
+            </h2>
+            <div style="margin-bottom: 20px;">
+                <input type="text" id="phoneCheckInput" placeholder="+8801XXXXXXXXX" style="width: 100%;">
+                <button id="checkPhoneBtn" class="btn" style="margin-top: 10px;">
+                    <i class="fas fa-search"></i> Check Phone
+                </button>
+            </div>
+            <div id="phoneCheckResult" style="padding: 15px; border-radius: 10px; background: rgba(15, 23, 42, 0.5);">
+                <div style="text-align: center; color: var(--muted);">
+                    <i class="fas fa-info-circle"></i> Enter a phone number to check
+                </div>
+            </div>
+            <button id="closePhoneModal" class="btn btn-secondary" style="margin-top: 20px; width: 100%;">
+                <i class="fas fa-times"></i> Close
+            </button>
         </div>
     </div>
 
@@ -634,6 +751,7 @@
         } else {
             tokenBox.textContent = savedToken;
             mainContent.style.display = 'block';
+            loadStats();
         }
 
         submitUsername.addEventListener('click', async () => {
@@ -656,6 +774,7 @@
                 usernameModal.classList.remove('show');
                 mainContent.style.display = 'block';
                 showNotification('Welcome! Your account has been created.', 'success');
+                loadStats();
             } else {
                 usernameStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error: ${res.error || 'Failed to create account'}`;
                 submitUsername.disabled = false;
@@ -698,6 +817,7 @@
         const previewContent = document.getElementById('previewContent');
         const modalClose = document.getElementById('modalClose');
         const modalCopy = document.getElementById('modalCopy');
+        const modalDownload = document.getElementById('modalDownload');
         const getSessionsBtn = document.getElementById('getSessionsBtn');
         const sessionsPanel = document.getElementById('sessionsPanel');
         const createStatus = document.getElementById('createStatus');
@@ -706,6 +826,19 @@
         const phoneCheck = document.getElementById('phoneCheck');
         const passwordArea = document.getElementById('passwordArea');
         const passwordInput = document.getElementById('passwordInput');
+        const proxyInfo = document.getElementById('proxyInfo');
+        const checkAllPhones = document.getElementById('checkAllPhones');
+        const phoneModal = document.getElementById('phoneModal');
+        const phoneCheckInput = document.getElementById('phoneCheckInput');
+        const checkPhoneBtn = document.getElementById('checkPhoneBtn');
+        const phoneCheckResult = document.getElementById('phoneCheckResult');
+        const closePhoneModal = document.getElementById('closePhoneModal');
+        
+        // Stats elements
+        const totalSessions = document.getElementById('totalSessions');
+        const twofaSessions = document.getElementById('twofaSessions');
+        const usedPhones = document.getElementById('usedPhones');
+        const countriesCount = document.getElementById('countriesCount');
 
         function updateStatus(message, type = 'info') {
             const icons = {
@@ -721,6 +854,39 @@
             createStatus.className = `status-container status-${type}`;
         }
 
+        // Load statistics
+        async function loadStats() {
+            try {
+                const response = await fetch('/sessionList?token=' + encodeURIComponent(localStorage.getItem('ts_token')));
+                if (response.ok) {
+                    const sessions = await response.json();
+                    
+                    // Calculate stats
+                    const total = sessions.length;
+                    const twofaCount = sessions.filter(s => s.has2FA).length;
+                    const countries = new Set(sessions.map(s => s.country).filter(c => c && c !== 'Unknown'));
+                    
+                    // Update display
+                    totalSessions.textContent = total;
+                    twofaSessions.textContent = twofaCount;
+                    countriesCount.textContent = countries.size;
+                    
+                    // Try to get used phones count
+                    try {
+                        const usedRes = await fetch('/users');
+                        if (usedRes.ok) {
+                            const users = await usedRes.json();
+                            usedPhones.textContent = users.length;
+                        }
+                    } catch {
+                        usedPhones.textContent = '?';
+                    }
+                }
+            } catch (error) {
+                console.log('Error loading stats:', error);
+            }
+        }
+
         // Phone number check
         async function checkPhoneNumber() {
             const phone = phoneInput.value.trim();
@@ -731,6 +897,7 @@
             
             phoneCheck.style.display = 'block';
             phoneCheck.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking phone number...';
+            proxyInfo.style.display = 'none';
             
             try {
                 const response = await fetch('/checkPhone', {
@@ -746,15 +913,18 @@
                         phoneCheck.className = 'phone-check used';
                         phoneCheck.innerHTML = '<i class="fas fa-times-circle"></i> This number has already been used';
                         sendOtpBtn.disabled = true;
+                        showNotification('This phone number has already been used', 'error');
                     } else {
                         phoneCheck.className = 'phone-check available';
                         phoneCheck.innerHTML = '<i class="fas fa-check-circle"></i> This number is available';
                         sendOtpBtn.disabled = false;
+                        proxyInfo.style.display = 'block';
                     }
                 }
             } catch (error) {
                 phoneCheck.className = 'phone-check';
                 phoneCheck.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Unable to check phone number';
+                sendOtpBtn.disabled = false;
             }
         }
 
@@ -807,6 +977,15 @@
             return await response.blob();
         }
 
+        async function apiCheckPhone(phone) {
+            const response = await fetch('/checkPhone', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone })
+            });
+            return await response.json();
+        }
+
         // Render sessions
         async function renderSessions() {
             sessionsEl.innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Loading sessions...</div>';
@@ -819,8 +998,11 @@
                     return;
                 }
                 
-                const cap = Number(capInput.value) || 5;
+                const cap = Number(capInput.value) || 10;
                 sessionsEl.innerHTML = '';
+                
+                // Sort by timestamp (newest first)
+                list.sort((a, b) => b.timestamp - a.timestamp);
                 
                 list.slice(0, cap).forEach((item, index) => {
                     const date = new Date(item.timestamp);
@@ -833,6 +1015,8 @@
                         hour12: true
                     });
                     
+                    const countryFlag = getCountryFlag(item.country);
+                    
                     const sessionItem = document.createElement('div');
                     sessionItem.className = 'session-item';
                     sessionItem.innerHTML = `
@@ -842,9 +1026,10 @@
                                 ${item.has2FA ? '<span class="badge badge-success">2FA ON</span>' : '<span class="badge badge-warning">2FA OFF</span>'}
                             </h4>
                             <div class="session-meta">
-                                <div><i class="fas fa-phone"></i> ${item.phone}</div>
+                                <div><i class="fas fa-phone"></i> ${item.phone} ${countryFlag}</div>
                                 <div><i class="fas fa-calendar"></i> ${dateStr}</div>
                                 <div><i class="fas fa-database"></i> ${(item.size / 1024).toFixed(1)} KB</div>
+                                ${item.country && item.country !== 'Unknown' ? `<div><i class="fas fa-globe"></i> ${item.country}</div>` : ''}
                             </div>
                         </div>
                         <div class="session-actions">
@@ -875,13 +1060,49 @@
                 
                 updateSelectedCount();
                 sessionsPanel.style.display = 'block';
-                showNotification('Sessions loaded successfully', 'success');
+                loadStats();
                 
             } catch (error) {
                 sessionsEl.innerHTML = `<div style="color: var(--danger); padding: 20px; text-align: center;">
                     <i class="fas fa-exclamation-circle"></i> Failed to load sessions: ${error.message}
                 </div>`;
             }
+        }
+
+        function getCountryFlag(countryCode) {
+            const flags = {
+                'BD': '🇧🇩',
+                'IN': '🇮🇳',
+                'US': '🇺🇸',
+                'GB': '🇬🇧',
+                'FR': '🇫🇷',
+                'DE': '🇩🇪',
+                'NL': '🇳🇱',
+                'SP': '🇸🇬',
+                'SA': '🇿🇦',
+                'RU': '🇷🇺',
+                'JP': '🇯🇵',
+                'KR': '🇰🇷',
+                'AU': '🇦🇺',
+                'PK': '🇵🇰',
+                'AE': '🇦🇪',
+                'EG': '🇪🇬',
+                'TR': '🇹🇷',
+                'ES': '🇪🇸',
+                'IT': '🇮🇹',
+                'CN': '🇨🇳',
+                'ID': '🇮🇩',
+                'MY': '🇲🇾',
+                'PH': '🇵🇭',
+                'TH': '🇹🇭',
+                'VN': '🇻🇳',
+                'BR': '🇧🇷',
+                'MX': '🇲🇽',
+                'AR': '🇦🇷',
+                'CO': '🇨🇴',
+                'VE': '🇻🇪'
+            };
+            return flags[countryCode] || '';
         }
 
         function updateSelectedCount() {
@@ -898,20 +1119,26 @@
                 
                 let content = '';
                 if (typeof data === 'object') {
-                    content = JSON.stringify(data, null, 2);
+                    // Format the JSON nicely
+                    const formattedData = {
+                        phone: data.phone || 'Unknown',
+                        country: data.country || 'Unknown',
+                        has2FA: data.has2FA ? 'Yes 🔐' : 'No',
+                        createdAt: data.createdAt ? new Date(data.createdAt).toLocaleString() : 'Unknown',
+                        sessionString: data.sessionString ? '(Session string hidden for security)' : 'Not found',
+                        twoFAPassword: data.twoFAPassword ? '*** (hidden) ***' : 'Not set'
+                    };
                     
-                    // Highlight 2FA info
-                    if (data.has2FA) {
-                        content = content.replace('"has2FA": true', '"has2FA": true 🔐');
-                    }
-                    if (data.twoFAPassword) {
-                        content = content.replace('"twoFAPassword":', '"twoFAPassword": ⚠️ ');
-                    }
+                    content = JSON.stringify(formattedData, null, 2);
                 } else {
                     content = data;
                 }
                 
                 previewContent.textContent = content;
+                
+                // Update download link
+                modalDownload.href = `/download/${encodeURIComponent(name)}?token=${encodeURIComponent(localStorage.getItem('ts_token'))}`;
+                modalDownload.download = name;
                 
             } catch (error) {
                 previewContent.textContent = `Error loading file: ${error.message}`;
@@ -950,10 +1177,18 @@
                     otpArea.style.display = 'block';
                     otpInput.focus();
                     showNotification('OTP sent! Please check your Telegram app', 'success');
+                    
+                    // Show proxy info if used
+                    if (result.proxyUsed) {
+                        proxyInfo.innerHTML = `<i class="fas fa-server"></i> Using proxy: ${result.proxyUsed}`;
+                        proxyInfo.style.display = 'block';
+                    }
                 } else {
                     if (result.error === 'ALREADY_USED') {
                         updateStatus('This number has already been used', 'error');
                         showNotification('This phone number has already been used', 'error');
+                        phoneCheck.className = 'phone-check used';
+                        phoneCheck.innerHTML = '<i class="fas fa-times-circle"></i> This number has already been used';
                     } else {
                         updateStatus(`Error: ${result.error}`, 'error');
                         showNotification(`Failed to send OTP: ${result.error}`, 'error');
@@ -1006,6 +1241,8 @@
                     phoneInput.value = '';
                     otpInput.value = '';
                     passwordInput.value = '';
+                    phoneCheck.style.display = 'none';
+                    proxyInfo.style.display = 'none';
                     
                     showNotification('Session created with 2FA protection!', 'success');
                     
@@ -1045,7 +1282,7 @@
 
         // Session management buttons
         selectAllBtn.addEventListener('click', () => {
-            const cap = Number(capInput.value) || 5;
+            const cap = Number(capInput.value) || 10;
             document.querySelectorAll('.session-checkbox').forEach((checkbox, index) => {
                 checkbox.checked = index < cap;
             });
@@ -1082,7 +1319,7 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 
-                showNotification('ZIP file downloaded successfully', 'success');
+                showNotification(`ZIP file downloaded with ${selected.length} sessions`, 'success');
             } catch (error) {
                 showNotification(`Download failed: ${error.message}`, 'error');
             } finally {
@@ -1107,7 +1344,7 @@
         modalCopy.addEventListener('click', async () => {
             try {
                 await navigator.clipboard.writeText(previewContent.textContent);
-                showNotification('Copied to clipboard', 'success');
+                showNotification('Session details copied to clipboard', 'success');
             } catch (error) {
                 showNotification('Failed to copy', 'error');
             }
@@ -1117,6 +1354,75 @@
         previewModal.addEventListener('click', (e) => {
             if (e.target === previewModal) {
                 previewModal.classList.remove('show');
+            }
+        });
+
+        // Phone check modal
+        checkAllPhones.addEventListener('click', () => {
+            phoneModal.classList.add('show');
+            phoneCheckInput.focus();
+        });
+
+        checkPhoneBtn.addEventListener('click', async () => {
+            const phone = phoneCheckInput.value.trim();
+            if (!phone) {
+                phoneCheckResult.innerHTML = `<div style="color: var(--danger); text-align: center;">
+                    <i class="fas fa-exclamation-circle"></i> Please enter a phone number
+                </div>`;
+                return;
+            }
+            
+            phoneCheckResult.innerHTML = `<div style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> Checking...</div>`;
+            checkPhoneBtn.disabled = true;
+            
+            try {
+                const result = await apiCheckPhone(phone);
+                
+                if (result.ok) {
+                    if (result.isUsed) {
+                        phoneCheckResult.innerHTML = `<div style="color: var(--danger); text-align: center;">
+                            <i class="fas fa-times-circle"></i> Phone Number: ${phone}<br>
+                            <strong>Status:</strong> Already Used<br>
+                            <small>This number cannot be used again</small>
+                        </div>`;
+                    } else {
+                        phoneCheckResult.innerHTML = `<div style="color: var(--success); text-align: center;">
+                            <i class="fas fa-check-circle"></i> Phone Number: ${phone}<br>
+                            <strong>Status:</strong> Available<br>
+                            <small>This number can be used</small>
+                        </div>`;
+                    }
+                } else {
+                    phoneCheckResult.innerHTML = `<div style="color: var(--warning); text-align: center;">
+                        <i class="fas fa-exclamation-triangle"></i> Error: ${result.error || 'Unknown error'}
+                    </div>`;
+                }
+            } catch (error) {
+                phoneCheckResult.innerHTML = `<div style="color: var(--danger); text-align: center;">
+                    <i class="fas fa-exclamation-circle"></i> Network error: ${error.message}
+                </div>`;
+            } finally {
+                checkPhoneBtn.disabled = false;
+            }
+        });
+
+        phoneCheckInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkPhoneBtn.click();
+            }
+        });
+
+        closePhoneModal.addEventListener('click', () => {
+            phoneModal.classList.remove('show');
+            phoneCheckInput.value = '';
+            phoneCheckResult.innerHTML = `<div style="text-align: center; color: var(--muted);">
+                <i class="fas fa-info-circle"></i> Enter a phone number to check
+            </div>`;
+        });
+
+        phoneModal.addEventListener('click', (e) => {
+            if (e.target === phoneModal) {
+                phoneModal.classList.remove('show');
             }
         });
 
