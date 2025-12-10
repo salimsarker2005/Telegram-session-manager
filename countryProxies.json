@@ -1,0 +1,475 @@
+{
+  "BD": [
+    {
+      "ip": "103.125.173.94",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Bangladesh",
+      "provider": "Premium Proxy BD",
+      "speed": "Fast",
+      "active": true
+    },
+    {
+      "ip": "103.247.122.102",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Bangladesh",
+      "provider": "BD-Proxy Network",
+      "speed": "Medium",
+      "active": true
+    },
+    {
+      "ip": "163.47.37.190",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Bangladesh",
+      "provider": "Backup Proxy",
+      "speed": "Slow",
+      "active": true
+    }
+  ],
+  
+  "IN": [
+    {
+      "ip": "103.216.51.210",
+      "port": 6667,
+      "socksType": 5,
+      "country": "India",
+      "provider": "IN-Proxy Premium",
+      "speed": "Fast",
+      "active": true
+    },
+    {
+      "ip": "103.83.232.122",
+      "port": 1080,
+      "socksType": 5,
+      "country": "India",
+      "provider": "India Proxy Hub",
+      "speed": "Medium",
+      "active": true
+    },
+    {
+      "ip": "103.137.91.250",
+      "port": 1080,
+      "socksType": 5,
+      "country": "India",
+      "provider": "IN-Residential",
+      "speed": "Fast",
+      "active": true
+    }
+  ],
+  
+  "US": [
+    {
+      "ip": "104.200.135.46",
+      "port": 4145,
+      "socksType": 5,
+      "country": "USA",
+      "provider": "US Premium Proxy",
+      "speed": "Very Fast",
+      "active": true
+    },
+    {
+      "ip": "45.77.56.114",
+      "port": 1080,
+      "socksType": 5,
+      "country": "USA",
+      "provider": "US High Speed",
+      "speed": "Fast",
+      "active": true
+    },
+    {
+      "ip": "209.141.55.228",
+      "port": 1080,
+      "socksType": 5,
+      "country": "USA",
+      "provider": "US Backup",
+      "speed": "Medium",
+      "active": true
+    }
+  ],
+  
+  "NL": [
+    {
+      "ip": "128.199.37.92",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Netherlands",
+      "provider": "NL Premium",
+      "speed": "Very Fast",
+      "active": true
+    },
+    {
+      "ip": "145.239.93.58",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Netherlands",
+      "provider": "NL Fast",
+      "speed": "Fast",
+      "active": true
+    },
+    {
+      "ip": "185.244.172.137",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Netherlands",
+      "provider": "NL Stable",
+      "speed": "Medium",
+      "active": true
+    }
+  ],
+  
+  "SP": [
+    {
+      "ip": "213.35.126.34",
+      "port": 10808,
+      "socksType": 5,
+      "country": "Singapore",
+      "provider": "SG Premium",
+      "speed": "Very Fast",
+      "active": true
+    },
+    {
+      "ip": "139.162.78.109",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Singapore",
+      "provider": "SG High Speed",
+      "speed": "Fast",
+      "active": true
+    },
+    {
+      "ip": "128.199.247.21",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Singapore",
+      "provider": "SG Backup",
+      "speed": "Medium",
+      "active": true
+    }
+  ],
+  
+  "SA": [
+    {
+      "ip": "197.221.123.114",
+      "port": 4153,
+      "socksType": 5,
+      "country": "South Africa",
+      "provider": "ZA Premium",
+      "speed": "Fast",
+      "active": true
+    },
+    {
+      "ip": "41.215.245.114",
+      "port": 8080,
+      "socksType": 5,
+      "country": "South Africa",
+      "provider": "ZA Fast",
+      "speed": "Medium",
+      "active": true
+    },
+    {
+      "ip": "102.165.51.58",
+      "port": 1080,
+      "socksType": 5,
+      "country": "South Africa",
+      "provider": "ZA Backup",
+      "speed": "Slow",
+      "active": true
+    }
+  ],
+  
+  "GB": [
+    {
+      "ip": "51.89.154.149",
+      "port": 1080,
+      "socksType": 5,
+      "country": "United Kingdom",
+      "provider": "UK Premium",
+      "speed": "Very Fast",
+      "active": true
+    },
+    {
+      "ip": "51.89.151.137",
+      "port": 1080,
+      "socksType": 5,
+      "country": "United Kingdom",
+      "provider": "UK Fast",
+      "speed": "Fast",
+      "active": true
+    }
+  ],
+  
+  "CA": [
+    {
+      "ip": "144.217.240.187",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Canada",
+      "provider": "CA Premium",
+      "speed": "Fast",
+      "active": true
+    },
+    {
+      "ip": "144.217.240.188",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Canada",
+      "provider": "CA Fast",
+      "speed": "Medium",
+      "active": true
+    }
+  ],
+  
+  "AU": [
+    {
+      "ip": "103.233.103.147",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Australia",
+      "provider": "AU Premium",
+      "speed": "Fast",
+      "active": true
+    },
+    {
+      "ip": "45.76.43.163",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Australia",
+      "provider": "AU Fast",
+      "speed": "Medium",
+      "active": true
+    }
+  ],
+  
+  "RU": [
+    {
+      "ip": "185.220.100.243",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Russia",
+      "provider": "RU Premium",
+      "speed": "Fast",
+      "active": true
+    },
+    {
+      "ip": "185.220.100.244",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Russia",
+      "provider": "RU Fast",
+      "speed": "Medium",
+      "active": true
+    }
+  ],
+  
+  "DE": [
+    {
+      "ip": "185.220.100.245",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Germany",
+      "provider": "DE Premium",
+      "speed": "Very Fast",
+      "active": true
+    },
+    {
+      "ip": "185.220.100.246",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Germany",
+      "provider": "DE Fast",
+      "speed": "Fast",
+      "active": true
+    }
+  ],
+  
+  "FR": [
+    {
+      "ip": "185.220.100.247",
+      "port": 1080,
+      "socksType": 5,
+      "country": "France",
+      "provider": "FR Premium",
+      "speed": "Fast",
+      "active": true
+    },
+    {
+      "ip": "185.220.100.248",
+      "port": 1080,
+      "socksType": 5,
+      "country": "France",
+      "provider": "FR Fast",
+      "speed": "Medium",
+      "active": true
+    }
+  ],
+  
+  "JP": [
+    {
+      "ip": "45.76.43.163",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Japan",
+      "provider": "JP Premium",
+      "speed": "Very Fast",
+      "active": true
+    },
+    {
+      "ip": "45.76.43.164",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Japan",
+      "provider": "JP Fast",
+      "speed": "Fast",
+      "active": true
+    }
+  ],
+  
+  "KR": [
+    {
+      "ip": "103.233.103.147",
+      "port": 1080,
+      "socksType": 5,
+      "country": "South Korea",
+      "provider": "KR Premium",
+      "speed": "Fast",
+      "active": true
+    },
+    {
+      "ip": "103.233.103.148",
+      "port": 1080,
+      "socksType": 5,
+      "country": "South Korea",
+      "provider": "KR Fast",
+      "speed": "Medium",
+      "active": true
+    }
+  ],
+  
+  "PK": [
+    {
+      "ip": "103.78.25.99",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Pakistan",
+      "provider": "PK Premium",
+      "speed": "Medium",
+      "active": true
+    },
+    {
+      "ip": "103.78.25.100",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Pakistan",
+      "provider": "PK Backup",
+      "speed": "Slow",
+      "active": true
+    }
+  ],
+  
+  "AE": [
+    {
+      "ip": "185.220.100.249",
+      "port": 1080,
+      "socksType": 5,
+      "country": "UAE",
+      "provider": "AE Premium",
+      "speed": "Fast",
+      "active": true
+    },
+    {
+      "ip": "185.220.100.250",
+      "port": 1080,
+      "socksType": 5,
+      "country": "UAE",
+      "provider": "AE Fast",
+      "speed": "Medium",
+      "active": true
+    }
+  ],
+  
+  "EG": [
+    {
+      "ip": "197.221.123.115",
+      "port": 4153,
+      "socksType": 5,
+      "country": "Egypt",
+      "provider": "EG Premium",
+      "speed": "Medium",
+      "active": true
+    }
+  ],
+  
+  "TR": [
+    {
+      "ip": "185.220.100.251",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Turkey",
+      "provider": "TR Premium",
+      "speed": "Fast",
+      "active": true
+    }
+  ],
+  
+  "ES": [
+    {
+      "ip": "185.220.100.252",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Spain",
+      "provider": "ES Premium",
+      "speed": "Fast",
+      "active": true
+    }
+  ],
+  
+  "IT": [
+    {
+      "ip": "185.220.100.253",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Italy",
+      "provider": "IT Premium",
+      "speed": "Fast",
+      "active": true
+    }
+  ],
+  
+  "CN": [
+    {
+      "ip": "103.233.103.149",
+      "port": 1080,
+      "socksType": 5,
+      "country": "China",
+      "provider": "CN Premium",
+      "speed": "Medium",
+      "active": true
+    }
+  ],
+  
+  "ID": [
+    {
+      "ip": "103.233.103.150",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Indonesia",
+      "provider": "ID Premium",
+      "speed": "Medium",
+      "active": true
+    }
+  ],
+  
+  "MY": [
+    {
+      "ip": "103.233.103.151",
+      "port": 1080,
+      "socksType": 5,
+      "country": "Malaysia",
+      "provider": "MY Premium",
+      "speed": "Fast",
+      "active": true
+    }
+  ]
+}
