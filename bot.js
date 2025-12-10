@@ -3,8 +3,8 @@ const fs = require("fs");
 const path = require("path");
 const archiver = require("archiver");
 
-const BOT_TOKEN = "8598204496:AAGBC54YH971QBHGKMBiy5U9niKggbEKBCw";
-const ADMIN_IDS = [6381012703];
+const BOT_TOKEN = "8355719607:AAFdVV1jIQKM_0Y29_G2hcKbj7CHe8nE0wE";
+const ADMIN_IDS = [7743078303];
 const BASE = path.join(__dirname, "sessionStore");
 
 const bot = new TelegramBot(BOT_TOKEN, { polling: true });
